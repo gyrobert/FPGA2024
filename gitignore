@@ -1,0 +1,5 @@
+    *
+    !*.xpr
+    !*/
+    !/my-project.srcs/*
+    !/my-project.srcs/**/*
