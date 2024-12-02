@@ -1,5 +1,12 @@
+<<<<<<< HEAD
     *
     !*.xpr
     !*/
     !/my-project.srcs/*
+=======
+    *
+    !*.xpr
+    !*/
+    !/my-project.srcs/*
+>>>>>>> 7035c1b58e41203dcea9ee83ce0b81217f71f8ca
     !/my-project.srcs/**/*
