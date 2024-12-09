@@ -1,11 +1,10 @@
 # FPGA2024
 
+# PROJEKT CÍME: Led Strip Control  
 
-# PROJEKT CÍME:
+# HALLGATÓ NEVE: Gyöngyösi Róbert
 
-# HALLGATÓ NEVE: 
-
-## SZAK: 
+## SZAK: Távközlés IV.
 
 ### PROJEKT LEAÁDSÁNAK IDŐPONTJA: 
 
