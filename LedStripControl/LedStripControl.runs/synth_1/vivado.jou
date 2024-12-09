@@ -3,12 +3,12 @@
 # SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
 # IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
 # SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-# Start of session at: Wed Nov 27 09:39:50 2024
-# Process ID: 12316
+# Start of session at: Mon Dec  2 15:04:24 2024
+# Process ID: 4040
 # Current directory: E:/Diak/GyongyosiRobert/UKDA/LedStripControl/LedStripControl.runs/synth_1
-# Command line: vivado.exe -log pulse_generator.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source pulse_generator.tcl
-# Log file: E:/Diak/GyongyosiRobert/UKDA/LedStripControl/LedStripControl.runs/synth_1/pulse_generator.vds
+# Command line: vivado.exe -log pulse_fsm.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source pulse_fsm.tcl
+# Log file: E:/Diak/GyongyosiRobert/UKDA/LedStripControl/LedStripControl.runs/synth_1/pulse_fsm.vds
 # Journal file: E:/Diak/GyongyosiRobert/UKDA/LedStripControl/LedStripControl.runs/synth_1\vivado.jou
 # Running On: 309x7, OS: Windows, CPU Frequency: 2904 MHz, CPU Physical cores: 6, Host memory: 16949 MB
 #-----------------------------------------------------------
-source pulse_generator.tcl -notrace
+source pulse_fsm.tcl -notrace
