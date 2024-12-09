@@ -1,0 +1,16 @@
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Mon Dec  9 14:58:55 2024
+# Process ID: 1636
+# Current directory: E:/Diak/GyongyosiRobert/PROJEKT/FPGA2024/LedStripControl
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent13432 E:\Diak\GyongyosiRobert\PROJEKT\FPGA2024\LedStripControl\LedStripControl.xpr
+# Log file: E:/Diak/GyongyosiRobert/PROJEKT/FPGA2024/LedStripControl/vivado.log
+# Journal file: E:/Diak/GyongyosiRobert/PROJEKT/FPGA2024/LedStripControl\vivado.jou
+# Running On: 309x7, OS: Windows, CPU Frequency: 2904 MHz, CPU Physical cores: 6, Host memory: 16949 MB
+#-----------------------------------------------------------
+start_gui
+open_project E:/Diak/GyongyosiRobert/PROJEKT/FPGA2024/LedStripControl/LedStripControl.xpr
+update_compile_order -fileset sources_1
