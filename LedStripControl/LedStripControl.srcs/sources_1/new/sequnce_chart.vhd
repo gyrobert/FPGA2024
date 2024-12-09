@@ -2,27 +2,31 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity pulse_fsm is
+entity led_strip_controller is
     Port (
         clk       : in  STD_LOGIC;
         reset     : in  STD_LOGIC;
         start     : in  STD_LOGIC;
         data_in   : in  STD_LOGIC_VECTOR(23 downto 0);
-        pulse_out : out STD_LOGIC
+        pulse_out : out STD_LOGIC;
+        led_ready : out STD_LOGIC
     );
-end pulse_fsm;
+end led_strip_controller;
 
-architecture Behavioral of pulse_fsm is
+architecture Behavioral of led_strip_controller is
 
-    type state_type is (IDLE, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, DONE);
+    -- Állapotok
+    type state_type is (IDLE, INIT, CLEAR_LEDS, ANIMATE, PROCESSING, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, DONE);
     signal current_state, next_state : state_type := IDLE;
 
+    -- Számlálók és változók
     signal bit_index : integer range 0 to 23 := 23; -- aktuális bit indexe
-    signal counter : integer range 0 to 1600 := 0; -- id?zítési számláló
-    signal current_bit : std_logic; -- az aktuális bit értéke
-    signal pulse_reg : std_logic := '0'; -- pulse_out regisztere
+    signal counter : integer range 0 to 1600 := 0; -- id?zít? számláló
+    signal current_bit : std_logic; -- aktuális bit értéke
+    signal pulse_reg : std_logic := '0'; -- pulse_out regiszter
+    signal led_buffer : std_logic_vector(23 downto 0) := (others => '0'); -- LED adatok
 
-    -- Id?tartamok (órajelfügg? ciklusszámok, például 10ns órajelhez)
+    -- Id?zítési állandók
     constant T0H_MIN : integer := 22;  -- 220ns
     constant T0H_MAX : integer := 38;  -- 380ns
     constant T0L_MIN : integer := 58;  -- 580ns
@@ -49,18 +53,50 @@ begin
         -- Alapértékek
         next_state <= current_state;
         pulse_reg <= '0';
-        
+        led_ready <= '0';
+
         case current_state is
+            -- IDLE állapot: várakozás az indításra
             when IDLE =>
                 if start = '1' then
-                    next_state <= T0H_STATE;
-                    bit_index <= 23;
+                    next_state <= INIT;
+                end if;
+
+            -- INIT állapot: NeoLED vezérl? inicializálása
+            when INIT =>
+                if start = '1' then
+                    next_state <= CLEAR_LEDS;
+                end if;
+
+            -- CLEAR_LEDS állapot: összes LED kikapcsolása
+            when CLEAR_LEDS =>
+                led_buffer <= (others => '0'); -- Minden LED törlése
+                next_state <= ANIMATE;
+
+            -- ANIMATE állapot: LED adatok kiszámítása
+            when ANIMATE =>
+                led_buffer <= std_logic_vector(to_unsigned(23, 24)); -- Dummy animáció adat
+                next_state <= PROCESSING;
+
+            -- PROCESSING állapot: bitenkénti pulzus-generálás el?készítése
+            when PROCESSING =>
+                if bit_index = 0 then
+                    next_state <= DONE;
+                else
+                    current_bit <= led_buffer(bit_index);
+                    if current_bit = '1' then
+                        next_state <= T1H_STATE;
+                    else
+                        next_state <= T0H_STATE;
+                    end if;
+                    bit_index <= bit_index - 1;
                     counter <= 0;
                 end if;
 
+            -- Pulzusok generálása az id?zítések alapján
             when T0H_STATE =>
                 pulse_reg <= '1';
-                if counter >= T0H_MIN and counter <= T0H_MAX then
+                if counter >= T0H_MAX then
                     next_state <= T0L_STATE;
                     counter <= 0;
                 else
@@ -69,18 +105,8 @@ begin
 
             when T0L_STATE =>
                 pulse_reg <= '0';
-                if counter >= T0L_MIN and counter <= T0L_MAX then
-                    if bit_index > 0 then
-                        bit_index <= bit_index - 1;
-                        current_bit <= data_in(bit_index - 1);
-                        if current_bit = '1' then
-                            next_state <= T1H_STATE;
-                        else
-                            next_state <= T0H_STATE;
-                        end if;
-                    else
-                        next_state <= DONE;
-                    end if;
+                if counter >= T0L_MAX then
+                    next_state <= PROCESSING;
                     counter <= 0;
                 else
                     counter <= counter + 1;
@@ -88,7 +114,7 @@ begin
 
             when T1H_STATE =>
                 pulse_reg <= '1';
-                if counter >= T1H_MIN and counter <= T1H_MAX then
+                if counter >= T1H_MAX then
                     next_state <= T1L_STATE;
                     counter <= 0;
                 else
@@ -97,24 +123,16 @@ begin
 
             when T1L_STATE =>
                 pulse_reg <= '0';
-                if counter >= T1L_MIN and counter <= T1L_MAX then
-                    if bit_index > 0 then
-                        bit_index <= bit_index - 1;
-                        current_bit <= data_in(bit_index - 1);
-                        if current_bit = '1' then
-                            next_state <= T1H_STATE;
-                        else
-                            next_state <= T0H_STATE;
-                        end if;
-                    else
-                        next_state <= DONE;
-                    end if;
+                if counter >= T1L_MAX then
+                    next_state <= PROCESSING;
                     counter <= 0;
                 else
                     counter <= counter + 1;
                 end if;
 
+            -- DONE állapot: Animáció vége, vissza IDLE-be
             when DONE =>
+                led_ready <= '1';
                 next_state <= IDLE;
 
             when others =>
@@ -125,3 +143,5 @@ begin
     pulse_out <= pulse_reg;
 
 end Behavioral;
+
+
