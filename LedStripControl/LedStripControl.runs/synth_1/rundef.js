@@ -24,7 +24,7 @@ eval( EAInclude(ISEJScriptLib) );
 
 
 ISEStep( "vivado",
-         "-log pulse_fsm.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source pulse_fsm.tcl" );
+         "-log pulse_generator.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source pulse_generator.tcl" );
 
 
 
