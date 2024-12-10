@@ -16,7 +16,7 @@ end led_strip_controller;
 architecture Behavioral of led_strip_controller is
 
     -- Állapotok
-    type state_type is (IDLE, INIT, CLEAR_LEDS, ANIMATE, PROCESSING, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, WAIT_STATE, DONE);
+    type state_type is (IDLE, INIT, CLEAR_LEDS, ANIMATE, PROCESSING, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, BIT_CHECK_STATE, DONE);
     signal current_state, next_state : state_type := IDLE;
 
     -- Számlálók és változók
@@ -60,13 +60,18 @@ begin
             when IDLE =>
                 if start = '1' then
                     next_state <= INIT;
+                else
+                    next_state <= IDLE;
                 end if;
 
             -- INIT 
             when INIT =>
-                if start = '1' then
+               if bit_index = 0 then
+                    bit_index <= 23;
+                    next_state <= INIT;
+               else
                     next_state <= CLEAR_LEDS;
-                end if;
+               end if;                        
 
             -- CLEAR_LEDS 
             when CLEAR_LEDS =>
@@ -80,9 +85,7 @@ begin
 
             -- PROCESSING 
             when PROCESSING =>
-                if bit_index = 0 then
-                    next_state <= DONE;
-                else
+             
                     current_bit <= led_buffer(bit_index);
                     if current_bit = '1' then
                         next_state <= T1H_STATE;
@@ -91,7 +94,6 @@ begin
                     end if;
                     bit_index <= bit_index - 1;
                     counter <= 0;
-                end if;
 
             --Pulse generalas
             when T0H_STATE =>
@@ -107,7 +109,7 @@ begin
             when T0L_STATE =>
                 pulse_reg <= '0';
                 if counter >= T0L_MAX then
-                    next_state <= DONE;
+                    next_state <= BIT_CHECK_STATE;
                     counter <= 0;
                 else
                     counter <= counter + 1;
@@ -125,20 +127,26 @@ begin
                     counter <= 0;
                 else
                     counter <= counter + 1;
+                    next_state <= T1H_STATE;
                 end if;
 
             when T1L_STATE =>
                 pulse_reg <= '0';
                 if counter >= T1L_MAX then
-                    next_state <= PROCESSING;
+                    next_state <= BIT_CHECK_STATE;
                     counter <= 0;
                 else
-                    next_state <= T1_DONE;
+                    counter <= counter + 1;
+                    next_state <= T1L_STATE;
                 end if;
-                
-            when T1_DONE =>
-                counter <= counter + 1;
-
+             
+             when BIT_CHECK_STATE =>
+                if bit_index = 0 then
+                    next_state <= DONE;
+                else
+                    next_state <= PROCESSING;
+                end if;
+                  
             -- DONE 
             when DONE =>
                 led_ready <= '1';
