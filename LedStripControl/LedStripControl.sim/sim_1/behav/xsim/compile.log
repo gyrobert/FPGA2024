@@ -1,4 +1,2 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "E:/Diak/GyongyosiRobert/UKDA/LedStripControl/LedStripControl.srcs/sources_1/new/sequnce_chart.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'pulse_fsm'
-INFO: [VRFC 10-163] Analyzing VHDL file "E:/Diak/GyongyosiRobert/UKDA/LedStripControl/LedStripControl.srcs/sim_1/new/pulse_sim.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'tb_pulse_fsm'
+INFO: [VRFC 10-163] Analyzing VHDL file "E:/Diak/GyongyosiRobert/PROJEKT/FPGA2024/LedStripControl/LedStripControl.srcs/sim_1/new/pulse_sim.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'led_strip_controller_tb'

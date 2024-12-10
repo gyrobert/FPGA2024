@@ -16,7 +16,7 @@ end led_strip_controller;
 architecture Behavioral of led_strip_controller is
 
     -- Állapotok
-    type state_type is (IDLE, INIT, CLEAR_LEDS, ANIMATE, PROCESSING, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, BIT_CHECK_STATE, DONE);
+    type state_type is (IDLE, INIT, CLEAR_LEDS, PROCESSING, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, BIT_CHECK_STATE, DONE);
     signal current_state, next_state : state_type := IDLE;
 
     -- Számlálók és változók
@@ -24,7 +24,7 @@ architecture Behavioral of led_strip_controller is
     signal counter : integer range 0 to 1600 := 0; 
     signal current_bit : std_logic;
     signal pulse_reg : std_logic := '0'; -- pulse_out
-    signal led_buffer : std_logic_vector(23 downto 0) := (others => '0'); -- LED data_in
+    signal led_buffer : std_logic_vector(23 downto 0) := (others => '0'); 
 
    
     constant T0H_MIN : integer := 22;  -- 220ns
@@ -54,33 +54,26 @@ begin
         next_state <= current_state;
         pulse_reg <= '0';
         led_ready <= '0';
+       
 
         case current_state is
             -- IDLE 
             when IDLE =>
                 if start = '1' then
-                    next_state <= INIT;
+                 next_state <= INIT;
                 else
                     next_state <= IDLE;
                 end if;
 
             -- INIT 
             when INIT =>
-               if bit_index = 0 then
-                    bit_index <= 23;
-                    next_state <= INIT;
-               else
-                    next_state <= CLEAR_LEDS;
-               end if;                        
-
+              counter <= 0;
+              bit_index <= 23;
+              next_state <= CLEAR_LEDS;
+                      
             -- CLEAR_LEDS 
             when CLEAR_LEDS =>
                 led_buffer <= (others => '0'); 
-                next_state <= ANIMATE;
-
-            -- ANIMATE 
-            when ANIMATE =>
-                led_buffer <= std_logic_vector(to_unsigned(23, 24)); 
                 next_state <= PROCESSING;
 
             -- PROCESSING 
@@ -92,7 +85,6 @@ begin
                     else
                         next_state <= T0H_STATE;
                     end if;
-                    bit_index <= bit_index - 1;
                     counter <= 0;
 
             --Pulse generalas
@@ -144,6 +136,7 @@ begin
                 if bit_index = 0 then
                     next_state <= DONE;
                 else
+                    bit_index <= bit_index - 1;
                     next_state <= PROCESSING;
                 end if;
                   

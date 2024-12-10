@@ -1,7 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../LedStripControl.srcs/sources_1/new/sequnce_chart.vhd" \
-"../../../../LedStripControl.srcs/sim_1/new/pulse_sim.vhd" \
-
-# Do not sort compile order
-nosort
