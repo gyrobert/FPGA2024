@@ -35,10 +35,10 @@ Színek folyamatos görgetése (rainbow effect).
 Pulzálás vagy színváltás előre definiált minták szerint.
 ##### Állapotvezérlés
 A rendszer különböző állapotokban működik, amelyeket az alábbiak vezérelnek:
-IDLE: A vezérlő várakozik az indítási jelre.
-INIT: Felkészülés az adatátvitelre.
-PROCESSING: Az adatok továbbítása és a LED-ek vezérlése zajlik.
-DONE: Az adatküldés befejeződött, a LED szalag készen áll.
+###### IDLE: A vezérlő várakozik az indítási jelre.
+###### INIT: Felkészülés az adatátvitelre.
+###### PROCESSING: Az adatok továbbítása és a LED-ek vezérlése zajlik.
+###### DONE: Az adatküldés befejeződött, a LED szalag készen áll.
 ##### Felhasználói interfész jelek
 ###### Bemenetek:
 clk: Órajel a rendszer működéséhez.
