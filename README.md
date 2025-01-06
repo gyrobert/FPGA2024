@@ -127,6 +127,20 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 - **Időzítések kezelése:** Számlálók segítségével az egyes impulzusok időzítésének biztosítása.
 - **Kimeneti vezérlés:** A `pulse_out` jel generálása az állapotgép és időzítések alapján.
 
+### Tervezés lépései
+
+#### 1) LED szallag működésének megértése:
+
+![LED_module_logika](https://github.com/user-attachments/assets/ddb87f7f-09c7-47c2-a819-7c0d506b377c)
+
+- **Megj.:** A LED szallag több kisebb egységből épül fel, minden egységet egy IC vezérel meg, amely ha a bemeneten(DI) adatot kapva megvilágítja az adott számú LED-et a 24 bites adat szerint, majd ha újabb adatot kap a bemenetén(DI), akkor az előbbi adatot továbbítja a kimenetén(DO) az utánna következő, sorba kötött LED egységre.
+
+#### 2) Állapotgép tervezése:
+
+- **Az állapot logika megrajzolása**
+  ![Allapotgep1](https://github.com/user-attachments/assets/f1a5f4c8-9bbb-42ed-a914-02195fc1f77c)
+- **Állapotlogika javítása**
+  ![Allapotgep2](https://github.com/user-attachments/assets/4927f1db-0496-4ab5-8074-5107fcfca14a)
 
 
 ## Bibliográfia:
