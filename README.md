@@ -138,10 +138,36 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 #### 2) Állapotgép tervezése:
 
 - **Az állapot logika megrajzolása**
+  
   ![Allapotgep1](https://github.com/user-attachments/assets/f1a5f4c8-9bbb-42ed-a914-02195fc1f77c)
+
+  - **Megj.:** A rajz az iniciális elképzelést ábrázolja.
+  
 - **Állapotlogika javítása**
+  
   ![Allapotgep2](https://github.com/user-attachments/assets/4927f1db-0496-4ab5-8074-5107fcfca14a)
 
+  - **Megj.:** A rajz a végleges logikát szemlélteti.
+
+#### 3) Művelet automaták:
+
+##### Állapot automata:
+
+![State_logic](https://github.com/user-attachments/assets/73eb99b5-8944-4ec2-acd4-e4dc1ebb473a)
+
+- **Megj.:** Ez az automata felelős a megfelelő állapot kiválasztásáért.
+
+##### Számláló automata:
+
+![Counter_logic](https://github.com/user-attachments/assets/eb7a841f-aa1d-45b6-b4dd-c54bd5967dc1)
+
+- **Megj.:** Ez az automata az időzítésért felelős, hogy a jelek pontosan generálodjanak.
+
+##### LED impulzus
+
+![LED_logic](https://github.com/user-attachments/assets/46bbf577-c573-41dd-8aa4-3508493eff09)
+
+- **Megj.:** Ez az automata felel a kimeneten való helyes impulzus kiküldéséről. 
 
 ## Bibliográfia:
 
