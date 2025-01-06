@@ -15,7 +15,7 @@ end led_strip_controller;
 architecture Behavioral of led_strip_controller is
 
     -- Állapotok
-    type state_type is (IDLE, PROCESSING, T0H_STATE,T0H_DONE, T0L_STATE, T0L_DONE, T1H_STATE, T1H_DONE, T1L_STATE,T1L_DONE, BIT_CHECK_STATE, DONE);
+    type state_type is (IDLE,INIT, PROCESSING, T0H_STATE,T0H_DONE, T0L_STATE, T0L_DONE, T1H_STATE, T1H_DONE, T1L_STATE,T1L_DONE, BIT_CHECK_STATE, DONE);
     signal current_state, next_state : state_type;
     signal counter, counter_next : integer range 0 to 1600; 
     -- Számlálók és változók
@@ -56,10 +56,16 @@ begin
             -- IDLE 
             when IDLE =>
                 if start = '1' then
-                 next_state <= PROCESSING;
+                 next_state <= INIT;
                 else
                     next_state <= IDLE;
                 end if;
+
+            --INIT
+            when INIT =>
+                bit_index <= 23;
+                led_buffer <= data_in;
+                next_state <= PROCESSING;
 
             -- feldolgozas 
             when PROCESSING =>
