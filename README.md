@@ -116,8 +116,8 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 - **IDLE:** Várakozás a `start` jelre.
 - **INIT:** A változók inicializálása.
 - **PROCESSING:** Az adatfeldolgozás elkezdése.
-- **T0H_STATE, T0L_STATE:** Logikai `0` jel generálása.
-- **T1H_STATE, T1L_STATE:** Logikai `1` jel generálása.
+- **T0H_STATE, T0H_DONE, T0L_STATE, T0L_DONE:** Logikai `0` jel generálása.
+- **T1H_STATE, T1H_DONE, T1L_STATE, T1L_DONE:** Logikai `1` jel generálása.
 - **BIT_CHECK_STATE:** Ellenőrzés, hogy minden bit ki lett-e küldve.
 - **DONE:** Az adatküldés vége, visszatérés az `IDLE` állapotba.
 
