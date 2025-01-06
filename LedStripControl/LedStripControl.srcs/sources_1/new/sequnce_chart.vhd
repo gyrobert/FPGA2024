@@ -8,25 +8,22 @@ entity led_strip_controller is
         reset     : in  STD_LOGIC;
         start     : in  STD_LOGIC;
         data_in   : in  STD_LOGIC_VECTOR(23 downto 0);
-        pulse_out : out STD_LOGIC;
-        led_ready : out STD_LOGIC
+        pulse_out : out STD_LOGIC
     );
 end led_strip_controller;
 
 architecture Behavioral of led_strip_controller is
 
-    -- Állapotok
-    type state_type is (IDLE, INIT, CLEAR_LEDS, PROCESSING, T0H_STATE, T0L_STATE, T1H_STATE, T1L_STATE, BIT_CHECK_STATE, DONE);
-    signal current_state, next_state : state_type := IDLE;
-
-    -- Számlálók és változók
-    signal bit_index : integer range 0 to 23 := 23; 
-    signal counter : integer range 0 to 1600 := 0; 
+    -- Ãllapotok
+    type state_type is (IDLE, PROCESSING, T0H_STATE,T0H_DONE, T0L_STATE, T0L_DONE, T1H_STATE, T1H_DONE, T1L_STATE,T1L_DONE, BIT_CHECK_STATE, DONE);
+    signal current_state, next_state : state_type;
+    signal counter, counter_next : integer range 0 to 1600; 
+    -- SzÃ¡mlÃ¡lÃ³k Ã©s vÃ¡ltozÃ³k
+    signal bit_index,bit_index_next : integer range 0 to 23; 
     signal current_bit : std_logic;
-    signal pulse_reg : std_logic := '0'; -- pulse_out
     signal led_buffer : std_logic_vector(23 downto 0) := (others => '0'); 
-
-   
+    signal led_out, led_out_next: std_logic;
+                          
     constant T0H_MIN : integer := 22;  -- 220ns
     constant T0H_MAX : integer := 38;  -- 380ns
     constant T0L_MIN : integer := 58;  -- 580ns
@@ -35,122 +32,121 @@ architecture Behavioral of led_strip_controller is
     constant T1H_MAX : integer := 160; -- 1600ns
     constant T1L_MIN : integer := 22;  -- 220ns
     constant T1L_MAX : integer := 42;  -- 420ns
-
+    
 begin
    
-    reg:process(clk, reset)
+    reset_state:process(clk, reset)
     begin
         if reset = '1' then
             current_state <= IDLE;
-        elsif rising_edge(clk) then
+            counter <= 0;
+            pulse_out <= '0';
+        elsif(clk'event and clk='1') then
             current_state <= next_state;
+            counter <= counter_next;
+            led_out <= led_out_next;
+            current_bit <= led_buffer(bit_index);
         end if;
-    end process;
+    end process reset_state;
 
-   
-   logic:process(current_state, start, counter, bit_index, current_bit)
+    
+   case_log:process(current_state, start, counter, bit_index, current_bit)
     begin
-        -- Alapértékek
-        next_state <= current_state;
-        pulse_reg <= '0';
-        led_ready <= '0';
-       
-
         case current_state is
             -- IDLE 
             when IDLE =>
                 if start = '1' then
-                 next_state <= INIT;
+                 next_state <= PROCESSING;
                 else
                     next_state <= IDLE;
                 end if;
 
-            -- INIT 
-            when INIT =>
-              counter <= 0;
-              bit_index <= 23;
-              next_state <= CLEAR_LEDS;
-                      
-            -- CLEAR_LEDS 
-            when CLEAR_LEDS =>
-                led_buffer <= (others => '0'); 
-                next_state <= PROCESSING;
-
-            -- PROCESSING 
+            -- feldolgozas 
             when PROCESSING =>
-             
-                    current_bit <= led_buffer(bit_index);
                     if current_bit = '1' then
                         next_state <= T1H_STATE;
-                    else
+                    elsif current_bit = '0' then
                         next_state <= T0H_STATE;
                     end if;
-                    counter <= 0;
+                   
 
             --Pulse generalas
             when T0H_STATE =>
-                pulse_reg <= '1';
-                if counter >= T0H_MAX then
-                    next_state <= T0L_STATE;
-                    counter <= 0;
-                else
-                    counter <= counter + 1;
+                if counter < T0H_MAX then
                     next_state <= T0H_STATE;
+                else
+                    next_state <= T0L_STATE;
                 end if;
 
             when T0L_STATE =>
-                pulse_reg <= '0';
-                if counter >= T0L_MAX then
-                    next_state <= BIT_CHECK_STATE;
-                    counter <= 0;
-                else
-                    counter <= counter + 1;
+                if counter < T0L_MAX then
                     next_state <= T0L_STATE;
+                else
+                    next_state <= BIT_CHECK_STATE;
                 end if;
                 
-            
-                    
-                    
-
+          
             when T1H_STATE =>
-                pulse_reg <= '1';
-                if counter >= T1H_MAX then
-                    next_state <= T1L_STATE;
-                    counter <= 0;
-                else
-                    counter <= counter + 1;
+                if counter = T1H_MAX then
                     next_state <= T1H_STATE;
-                end if;
-
-            when T1L_STATE =>
-                pulse_reg <= '0';
-                if counter >= T1L_MAX then
-                    next_state <= BIT_CHECK_STATE;
-                    counter <= 0;
                 else
-                    counter <= counter + 1;
-                    next_state <= T1L_STATE;
+                    next_state <= T1H_DONE;
                 end if;
+            
+            when T1H_DONE =>
+                next_state <= T1L_STATE;
+            
+            when T1L_STATE =>
+                if counter = T1L_MAX then
+                    next_state <= T1L_STATE;
+                else
+                    next_state <= T1L_DONE;
+                end if;          
              
+             when T1L_DONE =>
+                next_state <= BIT_CHECK_STATE;
+                   
              when BIT_CHECK_STATE =>
-                if bit_index = 0 then
+                if bit_index <= 0 then
                     next_state <= DONE;
                 else
-                    bit_index <= bit_index - 1;
                     next_state <= PROCESSING;
                 end if;
                   
             -- DONE 
             when DONE =>
-                led_ready <= '1';
                 next_state <= IDLE;
 
             when others =>
                 next_state <= IDLE;
         end case;
-    end process;
-
-    pulse_out <= pulse_reg;
+    end process case_log;
+    
+    with current_state select
+        bit_index_next <= bit_index-1 when BIT_CHECK_STATE,
+                          bit_index when others;
+              
+                       
+    with current_state select
+        counter_next <= 0 when IDLE,
+                        1 when PROCESSING,
+                        0 when T0H_DONE,
+                        0 when T0L_DONE,
+                        0 when T1H_DONE,
+                        0 when T1L_DONE,
+                        counter+1 when others;
+                        
+    with current_state select
+        led_out_next <= '0' when IDLE,
+                        '1' when T0H_STATE,
+                        '1' when T1H_STATE,
+                        '0' when T0L_STATE,
+                        '0' when T1L_STATE,
+                        led_out when others;
+                      
+                            
+        
+    pulse_out <= led_out;
 
 end Behavioral;
 
