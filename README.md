@@ -90,28 +90,26 @@ A vezérlő áramkörének optimalizáltnak kell lennie az alacsony energiafogya
 - **0**: T0H = 220–380 ns, T0L = 580–1600 ns
 - **1**: T1H = 580–1600 ns, T1L = 220–420 ns
 
-### Tervezés
+### C) Tervezés
 
-# LED Strip Controller Documentation
+#### Főkomponensek
 
-## Főkomponensek
-
-### Bemenetek:
+##### Bemenetek:
 - `clk`: Órajel.
 - `reset`: Reset jel.
 - `start`: Indítási jel.
 - `data_in`: 24 bites bemeneti adat.
 
-### Kimenet:
+##### Kimenet:
 - `pulse_out`: Kimeneti impulzus.
 
-### Főmodulok:
+#### Főmodulok:
 - **Állapotgép (state machine):** A vezérlési logikát valósítja meg.
 - **Számlálók:** Az időzítések kezelésére szolgálnak.
 - **Bit indexelés (bit_index):** A bejövő adat bitjeinek feldolgozásához.
 - **LED vezérlő (led_out):** A LED szalag vezérléséhez szükséges jelek előállítása.
 
-## Állapotgép
+#### Állapotgép
 
 Az állapotgép az alábbi állapotokat tartalmazza:
 
@@ -123,7 +121,7 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 - **BIT_CHECK_STATE:** Ellenőrzés, hogy minden bit ki lett-e küldve.
 - **DONE:** Az adatküldés vége, visszatérés az `IDLE` állapotba.
 
-## Funkcionális blokkok
+#### Funkcionális blokkok
 
 - **Adatfeldolgozás:** A `data_in` bemeneti adat bitenkénti feldolgozása.
 - **Időzítések kezelése:** Számlálók segítségével az egyes impulzusok időzítésének biztosítása.
