@@ -37,26 +37,7 @@ A vezérlő képes egyszerűbb animációk futtatására, például:
 - Pulzálás vagy színváltás előre definiált minták szerint.
 
 ##### Állapotvezérlés
-A rendszer különböző állapotokban működik, amelyeket az alábbiak vezérelnek:
-
-- **IDLE**: A vezérlő várakozik az indítási jelre.
-- **INIT**: Felkészülés az adatátvitelre.
-- **PROCESSING**: Az adatok továbbítása és a LED-ek vezérlése zajlik.
-- **DONE**: Az adatküldés befejeződött, a LED szalag készen áll.
-
-##### Felhasználói interfész jelek
-
-###### Bemenetek:
-
-- **clk**: Órajel a rendszer működéséhez.
-- **reset**: A rendszer visszaállítása alapállapotba.
-- **start**: A vezérlés indítását jelző bemenet.
-- **data_in**: 24 bites bemeneti adat, amely egy LED színkódját tartalmazza.
-
-###### Kimenetek:
-
-- **pulse_out**: Az FPGA által generált időzített impulzusok, amelyek vezérlik a LED szalagot.
-- **led_ready**: Jelzi, ha a LED szalag vezérlés befejeződött és készen áll új adatok fogadására.
+A rendszer különböző állapotokban működik
 
 ##### Adatok ciklikus frissítése
 A vezérlő támogatja az adatok folyamatos frissítését valós idejű működés érdekében, biztosítva az animációk és színváltások folytonosságát.
@@ -108,6 +89,47 @@ A vezérlő áramkörének optimalizáltnak kell lennie az alacsony energiafogya
 
 - **0**: T0H = 220–380 ns, T0L = 580–1600 ns
 - **1**: T1H = 580–1600 ns, T1L = 220–420 ns
+
+### Tervezés
+
+# LED Strip Controller Documentation
+
+## Főkomponensek
+
+### Bemenetek:
+- `clk`: Órajel.
+- `reset`: Reset jel.
+- `start`: Indítási jel.
+- `data_in`: 24 bites bemeneti adat.
+
+### Kimenet:
+- `pulse_out`: Kimeneti impulzus.
+
+### Főmodulok:
+- **Állapotgép (state machine):** A vezérlési logikát valósítja meg.
+- **Számlálók:** Az időzítések kezelésére szolgálnak.
+- **Bit indexelés (bit_index):** A bejövő adat bitjeinek feldolgozásához.
+- **LED vezérlő (led_out):** A LED szalag vezérléséhez szükséges jelek előállítása.
+
+## Állapotgép
+
+Az állapotgép az alábbi állapotokat tartalmazza:
+
+- **IDLE:** Várakozás a `start` jelre.
+- **INIT:** A változók inicializálása.
+- **PROCESSING:** Az adatfeldolgozás elkezdése.
+- **T0H_STATE, T0L_STATE:** Logikai `0` jel generálása.
+- **T1H_STATE, T1L_STATE:** Logikai `1` jel generálása.
+- **BIT_CHECK_STATE:** Ellenőrzés, hogy minden bit ki lett-e küldve.
+- **DONE:** Az adatküldés vége, visszatérés az `IDLE` állapotba.
+
+## Funkcionális blokkok
+
+- **Adatfeldolgozás:** A `data_in` bemeneti adat bitenkénti feldolgozása.
+- **Időzítések kezelése:** Számlálók segítségével az egyes impulzusok időzítésének biztosítása.
+- **Kimeneti vezérlés:** A `pulse_out` jel generálása az állapotgép és időzítések alapján.
+
+
 
 ## Bibliográfia:
 
