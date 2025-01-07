@@ -15,7 +15,7 @@ end led_strip_controller;
 architecture Behavioral of led_strip_controller is
 
     -- Állapotok
-    type state_type is (IDLE,INIT, PROCESSING, T0H_STATE,T0H_DONE, T0L_STATE, T0L_DONE, T1H_STATE, T1H_DONE, T1L_STATE,T1L_DONE, BIT_CHECK_STATE, DONE);
+    type state_type is (IDLE, INIT, PROCESSING, T0H_STATE,T0H_DONE, T0L_STATE, T0L_DONE, T1H_STATE, T1H_DONE, T1L_STATE,T1L_DONE, BIT_CHECK_STATE, DONE);
     signal current_state, next_state : state_type;
     signal counter, counter_next : integer range 0 to 1600; 
     -- Számlálók és változók
@@ -130,16 +130,21 @@ begin
     
     with current_state select
         bit_index_next <= bit_index-1 when BIT_CHECK_STATE,
+                          23 when INIT,
+                          0 when DONE,
                           bit_index when others;
               
                        
     with current_state select
         counter_next <= 0 when IDLE,
+                        0 when INIT,
                         1 when PROCESSING,
                         0 when T0H_DONE,
                         0 when T0L_DONE,
                         0 when T1H_DONE,
                         0 when T1L_DONE,
+                        0 when BIT_CHECK_STATE,
+                        0 when DONE,
                         counter+1 when others;
                         
     with current_state select
