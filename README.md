@@ -127,7 +127,7 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 - **Időzítések kezelése:** Számlálók segítségével az egyes impulzusok időzítésének biztosítása.
 - **Kimeneti vezérlés:** A `pulse_out` jel generálása az állapotgép és időzítések alapján.
 
-### Tervezés lépései
+### D) Tervezés lépései
 
 #### 1) LED szallag működésének megértése:
 
@@ -193,6 +193,39 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 | BIT_CHECK_STATE | 1 | 0 | 0 | led_out | bit_index-1 |
 | DONE | 1 | 0 | 0 | led_out | 0 |
 
+### E) Tesztelés:
+
+#### VHDL Test Bench kód:
+
+##### Lépések:
+
+- **Reset aktíválása néhány órajelig **
+- **A kiküldendő adat beolvasása **
+- **Start aktíválása amíg a folyamat befejeződik és minden adat kiküldésre kerül **
+  
+```vhdl
+-- Tesztelési folyamat
+stim_proc: process
+begin
+    -- Reset állapot
+    reset <= '1';
+    wait for clk_period;
+    reset <= '0';
+
+    -- Adat küldése és start jel generálása
+    wait for clk_period;
+    data_in <= "101010101010101010101010";
+    wait for clk_period;
+    start <= '1';
+    wait for clk_period * 5;
+    start <= '0';
+
+    -- Várakozás a folyamat befejezésére
+    wait for clk_period * 100;
+    wait;
+end process;
+```
+- **Megj.:** Az adott kódrészlet a rendszer szimulációját teszi lehetővé. 
 
 ## Üzembe helyezés:
 
@@ -230,10 +263,10 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 ### Rendszer indítása
 
 1. **Resetelés**:  
-   Indításkor állítsd reset bemenetre az 1 értéket néhány órajelciklusig, majd vissza 0 értéket.
+   Indításkor állítsd reset bemenetre az 1 értéket a start kapcsoló melletti kapcsoló segítségével néhány órajelciklusig, majd vissza 0 értéket.
 
 2. **Start jel**:  
-   Állítsd a start bemeneti jelet 1-re az adatküldés elindításához.
+   Állítsd a start bemeneti jelet 1-re az adatküldés elindításához a kapcsoló 1-es pozicióba tételével.
 
 3. **Adatok betöltése**:  
    Töltsd be a data_in bemenetbe a 24 bites színt adatként, RGB formátumban (pl. data_in => "111111111111111111111111" a fehér színhez).
