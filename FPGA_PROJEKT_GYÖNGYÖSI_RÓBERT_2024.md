@@ -6,7 +6,7 @@
 
 ## SZAK: Távközlés IV.
 
-### PROJEKT LEAÁDSÁNAK IDŐPONTJA:
+### PROJEKT LEAÁDSÁNAK IDŐPONTJA: 2025.01.07 3:00
 
 ### A) Projekt célja
 
