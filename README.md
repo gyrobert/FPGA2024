@@ -193,6 +193,61 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 | BIT_CHECK_STATE | 1 | 0 | 0 | led_out | bit_index-1 |
 | DONE | 1 | 0 | 0 | led_out | 0 |
 
+
+## Üzembe helyezés:
+
+### Hardver követelmények
+
+- FPGA fejlesztőpanel (Digilent Nexys A7 100T).
+- Programozó kábel az FPGA konfigurálásához.
+- 5V-os LED szalag (pl. WS2812 vagy kompatibilis).
+- Tápellátás a LED szalaghoz.
+- Ellenállás (330–470 Ω) a LED szalag adatvonalának védelmére (opcionális, de ajánlott).
+- Kondenzátor (1000 µF, 6.3V vagy nagyobb) a LED szalag tápvonalának stabilizálására (opcionális, de ajánlott).
+
+### Szoftver követelmények
+
+- FPGA fejlesztőeszköz (Vivado).
+
+### Kód letöltése és fordítása
+
+1. Nyisd meg az FPGA fejlesztőeszközt (Vivado).
+2. Töltsd be a VHDL projektet.
+3. Fordítsd le a projektet a céleszközre optimalizálva.
+5. Töltsd fel a generált bitfájlt az FPGA-ra a programozó kábellel.
+
+### LED szalag csatlakoztatása
+
+1. **Adatvonal csatlakoztatása**:  
+   Kösd a LED szalag adat bemenetét (DIN) az FPGA megfelelő GPIO kimenetére, amelyhez a pulse_out jel van rendelve.
+
+2. **Tápellátás**: 
+   Kösd a LED szalag VCC és GND pontjait megfelelő feszültségforráshoz. (Opcionális)  Használj 1000 µF kondenzátort a stabilizálás érdekében.
+
+3. **(Opcionális)  Védelmi komponensek**:  
+   Illessz be egy 330–470 Ω-os ellenállást a GPIO kimenet és a LED szalag adatbemenete közé.
+
+### Rendszer indítása
+
+1. **Resetelés**:  
+   Indításkor állítsd reset bemenetre az 1 értéket néhány órajelciklusig, majd vissza 0 értéket.
+
+2. **Start jel**:  
+   Állítsd a start bemeneti jelet 1-re az adatküldés elindításához.
+
+3. **Adatok betöltése**:  
+   Töltsd be a data_in bemenetbe a 24 bites színt adatként, RGB formátumban (pl. data_in => "111111111111111111111111" a fehér színhez).
+
+4. **Figyeld a pulse_out jelet**:  
+   Ez jelzi az FPGA által generált időzítéseket a LED szalag számára.
+
+### További megjegyzések
+
+- Ha nagyobb LED szalagot használsz, ügyelj a tápellátás megfelelő méretezésére.
+- Szükség esetén bővítsd a vezérlő logikát, hogy több LED-et is kezeljen sorosan.
+- Ezzel a lépéssorozattal a LED Strip Controller működése üzembe helyezhető és ellenőrizhető.
+
+
 ## Bibliográfia:
 
 ### Brassai Sándor Tihamér: Újrakonfigurálható digitális áramkörök tervezési és tesztelési módszerei
