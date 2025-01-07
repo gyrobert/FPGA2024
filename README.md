@@ -163,11 +163,35 @@ Az állapotgép az alábbi állapotokat tartalmazza:
 
 - **Megj.:** Ez az automata az időzítésért felelős, hogy a jelek pontosan generálodjanak.
 
-##### LED impulzus
+##### LED impulzus automata:
 
 ![LED_logic](https://github.com/user-attachments/assets/46bbf577-c573-41dd-8aa4-3508493eff09)
 
-- **Megj.:** Ez az automata felel a kimeneten való helyes impulzus kiküldéséről. 
+- **Megj.:** Ez az automata felel a kimeneten való helyes impulzus kiküldéséről.
+
+##### Bit index automata:
+
+![bit_index_logic](https://github.com/user-attachments/assets/995b451b-d0aa-4585-a662-a46e4e752407)
+
+- **Megj.:** Ez az automata végzi el az indexelést, hogy a 24 bites adatot fel lehessen dolgozni eggyessével, bittenként.
+
+  #### 4) Fázisműveletek:
+
+| current_state | start | reset | counter_next | led_out_next | bit_index_next |
+|---------------|-------|-------|--------------|--------------|----------------|
+| IDLE | 0 | 1 | 0 | 0 | 0 |
+| INIT | 1 | 0 | 0 | led_out | bit_index |
+| PROCESSING | 1 | 0 | 1 | led_out | bit_index |
+| TOH_STATE | 1 | 0 | counter+1 | 0 | bit_index |
+| TOH_DONE | 1 | 0 | 0 | led_out | bit_index |
+| TOL_STATE | 1 | 0 | counter+1 | 0 | bit_index |
+| TOL_DONE | 1 | 0 | 0 | led_out | bit_index |
+| T1H_STATE | 1 | 0 | counter+1 | 0 | bit_index |
+| T1H_DONE | 1 | 0 | 0 | led_out | bit_index |
+| T1L_STATE | 1 | 0 | counter+1 | 1 | bit_index |
+| T1L_DONE | 1 | 0 | 0 | led_out | bit_index |
+| BIT_CHECK_STATE | 1 | 0 | 0 | led_out | bit_index-1 |
+| DONE | 1 | 0 | 0 | led_out | 0 |
 
 ## Bibliográfia:
 
