@@ -291,3 +291,8 @@ end process;
 
 ### Worldsemi LED
 [Link](https://www.tme.eu/ro/details/hcbaa90b/surse-de-lumina-benzi-cu-led-uri/worldsemi/hc-f5v-90l-90led-b-ws2813-ip20/)
+
+| Vezetéknév     | Keresztnév | Jelenlét | Általános | Tervezés | Mérések | Pont. Dok. | Tervezés | Implementálás | Szimuláció/Mérések | Valós megvalósítás | Valós rendszeren mérések | Pont. Projekt Gyak | Kérdések | Pluszpont | Projekt Jegy | Megjegyzések | Projekt komplexitása |
+|----------------|------------|----------|-----------|----------|---------|------------|----------|----------------|--------------------|-------------------|-------------------------|-------------------|----------|-----------|--------------|---------------|----------------------|
+|           |     | 10       | 10        | 10       | 10      | 30         | 10       | 10             | 10                 | 10                | 10                      | 50                | 10       | 1         | 100          |            |                      |
+|     Gyöngyösi            |   Róbert           |          |      7     |      7    |      6   |    20        |   6       |         6       |    3                | 0                  |            0             |        15           |      6    |      0     |      50      |               |          4            |
