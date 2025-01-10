@@ -225,7 +225,11 @@ begin
     wait;
 end process;
 ```
-- **Megj.:** Az adott kódrészlet a rendszer szimulációját teszi lehetővé. 
+- **Megj.:** Az adott kódrészlet a rendszer szimulációját teszi lehetővé.
+
+  #### Szimulacio:
+  ![Untitled1](https://github.com/user-attachments/assets/48935063-fd48-41b5-9904-dc54362fe20d)
+
 
 ## Üzembe helyezés:
 
